@@ -1,0 +1,60 @@
+[
+  {
+    "id": "classification",
+    "label": "What is the classification of your data?",
+    "helpTip": "This refers to the sensitivity and risk level of the data you are working with.",
+    "multi": false,
+    "options": [
+      { "text": "Public / Low Risk", "slug": "public_low_risk" },
+      { "text": "Sensitive / Moderate Risk", "slug": "sensitive_moderate_risk" },
+      { "text": "Confidential or Restricted / High Risk", "slug": "confidential_or_restricted_high_risk" },
+      { "text": "Payment Information / Extreme Risk", "slug": "payment_information_extreme_risk" }
+    ]
+  },
+  {
+    "id": "accessFrequency",
+    "label": "How often is the data expected to be accessed/modified?",
+    "helpTip": "This helps determine the performance and availability requirements.",
+    "multi": false,
+    "options": [
+      { "text": "Frequently", "slug": "frequently" },
+      { "text": "Occasionally", "slug": "occasionally" },
+      { "text": "Rarely", "slug": "rarely" },
+      { "text": "Just Once", "slug": "just_once" }
+    ]
+  },
+  {
+    "id": "sharing",
+    "label": "With whom do you need to regularly share your data?",
+    "helpTip": "This determines the access control and collaboration needs.",
+    "multi": true,
+    "options": [
+      { "text": "Staff & students, and External collaborators", "slug": "staff_students_external_collaborators" },
+      { "text": "Only staff & students", "slug": "staff_students" },
+      { "text": "The general public", "slug": "general_public" },
+      { "text": "No one - Only I need access", "slug": "only_me" }
+    ]
+  },
+  {
+    "id": "volumeGrowth",
+    "label": "How much data do you have, and how fast do you expect it to grow?",
+    "helpTip": "This helps assess storage capacity and scalability needs.",
+    "multi": false,
+    "options": [
+      { "text": "I have a small amount of data (<100GB), and it is unlikely to grow much in the next 2 years.", "slug": "small_amount_data_unlikely_to_grow" },
+      { "text": "I have a small amount of data (<100GB), but it is likely to grow exponentially in the next 2 years.", "slug": "small_amount_data_likely_to_grow" },
+      { "text": "I have a large amount of data (>100GB), but it is unlikely to grow significantly in the next 2 years", "slug": "large_amount_data_unlikely_to_grow" },
+      { "text": "I have a large amount of data (>100GB), and it is likely to grow exponentially in the next 2 years", "slug": "large_amount_data_likely_to_grow" }
+    ]
+  },
+  {
+    "id": "accessMethod",
+    "label": "How are you expecting to access the data?",
+    "helpTip": "This determines the network and security requirements.",
+    "multi": true,
+    "options": [
+      { "text": "I need easy access to this data from anywhere in the world, without VPN", "slug": "easy_access_no_vpn" },
+      { "text": "I need access to this data when in the office, or on the VPN", "slug": "office_or_vpn_access" }
+    ]
+  }
+]

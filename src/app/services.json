@@ -1,0 +1,71 @@
+[
+  {
+    "name": "GitHub",
+    "description": "Version control and collaboration platform for code.",
+    "criteria": {
+      "classification": ["public_low_risk", "sensitive_moderate_risk"],
+      "accessFrequency": ["frequently"],
+      "sharing": ["staff_students_external_collaborators"],
+      "volumeGrowth": ["small_amount_data_unlikely_to_grow"],
+      "accessMethod": ["easy_access_no_vpn"]
+    },
+    "details": {
+      "exampleUse": "Collaborative software development and version control.",
+      "cost": "Free for internal use; premium features may incur cost.",
+      "capacity": "Depends on repository size limits.",
+      "access": "Web-based with Git integration.",
+      "classifications": "Public, Sensitive",
+      "durability": "High, with repository backups.",
+      "availability": "99.9% uptime target.",
+      "complexity": "Moderate – requires Git knowledge.",
+      "support": "support@mycorp.local",
+      "howToAccess": "Request access via GitHub admin team."
+    }
+  },
+  {
+    "name": "Personal Network Drive",
+    "description": "Private network storage for individual users.",
+    "criteria": {
+      "classification": ["sensitive_moderate_risk", "confidential_or_restricted_high_risk"],
+      "accessFrequency": ["occasionally", "rarely"],
+      "sharing": ["only_me"],
+      "volumeGrowth": ["small_amount_data_unlikely_to_grow"],
+      "accessMethod": ["office_or_vpn"]
+    },
+    "details": {
+      "exampleUse": "Storing personal work files securely.",
+      "cost": "Included in IT services.",
+      "capacity": "Limited per user quota.",
+      "access": "Mapped drive via VPN or on-prem.",
+      "classifications": "Sensitive, Confidential",
+      "durability": "Backed up by IT.",
+      "availability": "Subject to IT maintenance.",
+      "complexity": "Low – standard file system.",
+      "support": "support@mycorp.local",
+      "howToAccess": "Provisioned automatically or via IT request."
+    }
+  },
+  {
+    "name": "SFTP",
+    "description": "Secure File Transfer Protocol for encrypted file transfers.",
+    "criteria": {
+      "classification": ["confidential_or_restricted_high_risk", "payment_information_extreme_risk"],
+      "accessFrequency": ["just_once", "rarely"],
+      "sharing": ["staff_students_external_collaborators"],
+      "volumeGrowth": ["large_amount_data_unlikely_to_grow"],
+      "accessMethod": ["office_or_vpn"]
+    },
+    "details": {
+      "exampleUse": "Securely transferring sensitive files.",
+      "cost": "No cost for internal transfers.",
+      "capacity": "Depends on server configuration.",
+      "access": "SFTP client with credentials.",
+      "classifications": "Confidential, Payment Information",
+      "durability": "Depends on server backup policy.",
+      "availability": "Subject to server uptime.",
+      "complexity": "Moderate – requires SFTP client.",
+      "support": "support@mycorp.local",
+      "howToAccess": "Request credentials from IT."
+    }
+  }
+]
