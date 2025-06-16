@@ -3,7 +3,7 @@ VERSION := latest
 
 PLATFORMS := linux/arm64,linux/amd64
 
-all: create-builder compile-app build-and-push
+all: create-builder compile-app
 
 compile-app:
 	rm -rf out && \
@@ -11,7 +11,7 @@ compile-app:
 	npm run build && \
 	mv out docker-build/
 
-build-and-push:
+release:
 	docker buildx build \
 		--platform=$(PLATFORMS) \
 		-t $(IMAGE_NAME):$(VERSION) \
@@ -26,4 +26,4 @@ inspect-builder:
 clean-builder:
 	docker buildx rm multiarch-builder || true
 
-.PHONY: all build create-builder inspect-builder clean-builder
+.PHONY: all compile-app release create-builder inspect-builder clean-builder
