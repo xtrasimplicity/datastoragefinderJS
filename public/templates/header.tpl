@@ -2,14 +2,12 @@
   <div class="container">
     <h1 class="display-4 fw-bold">Data Storage Finder</h1>
     <p class="lead">
-      Find and compare technology services that meet your specific project needs.
-      Use the filters to narrow down services based on features, cost, security,
-      and more. Select multiple services to view a detailed comparison side-by-side.
+      Evaluate organisationally-supported options for data storage.
     </p>
   </div>
 </header>
 <section class="container mb-5">
-  <h2 class="h4">How It Works</h2>
+  <h2 class="h4">How does it work?</h2>
   <p>
     This tool allows you to filter available technology services using the panel on the left.
     Each filter corresponds to a particular requirement or feature, such as data sensitivity,
@@ -21,6 +19,6 @@
     and more.
   </p>
   <p class="mb-0">
-    Need help deciding? Hover over the <strong>?</strong> icons next to each filter for guidance.
+    Need help deciding? Click on the <strong>?</strong> buttons next to each filter for guidance.
   </p>
 </section>
