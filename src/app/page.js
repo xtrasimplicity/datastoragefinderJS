@@ -17,8 +17,7 @@ function Sidebar({ questions, selectedOptions, onSelect, onClear }) {
       {questions.map(q => (
         <div key={q.id} className="question-block">
           <div className="question-header">
-            <h4>{q.label}</h4>
-            <button className="help-icon" onClick={() => toggleTip(q.id)}>?</button>
+            <h4>{q.label} <button className="help-icon" onClick={() => toggleTip(q.id)}>?</button></h4>
           </div>
           {visibleTips[q.id] && <div className="help-tip">{q.helpTip}</div>}
           {q.options.map(opt => {
