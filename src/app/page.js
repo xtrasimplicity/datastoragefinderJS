@@ -152,7 +152,7 @@ function App() {
   const handleOptionSelect = (questionId, optionSlug, isMulti) => {
     setSelectedOptions(prev => {
       if (!isMulti) {
-        return { ...prev, [questionId]: optionSlug };
+        return { ...prev, [questionId]: prev[questionId] === optionSlug ? null : optionSlug };
       }
       const current = prev[questionId] || [];
       const updated = current.includes(optionSlug)
