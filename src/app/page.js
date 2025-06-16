@@ -1,9 +1,7 @@
 "use client";
 import "bootstrap/dist/css/bootstrap.min.css";
 import './app.css';
-import { useState } from 'react';
-import questions from './questions.json';
-import services from './services.json';
+import { useState, useEffect } from 'react';
 
 function Sidebar({ questions, selectedOptions, onSelect, onClear }) {
   const [visibleTips, setVisibleTips] = useState({});
@@ -130,9 +128,26 @@ function ComparisonTable({ selectedServices }) {
   );
 }
 
+function LoadingScreen() {
+  return (
+    <div className="loading-screen d-flex align-items-center justify-content-center vh-100 bg-light">
+      <div className="text-center">
+        <div className="spinner-border text-primary mb-3" role="status" />
+        <h4>Loading…</h4>
+        <p className="text-muted">Please wait...</p>
+      </div>
+    </div>
+  );
+}
+
 function App() {
   const [selectedOptions, setSelectedOptions] = useState({});
   const [selected, setSelected] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [templatedHeaderHtml, setTemplatedHeaderHtml] = useState('');
+  const [questions, setQuestions] = useState([]);
+  const [services, setServices] = useState([]);
+
 
   const handleOptionSelect = (questionId, optionSlug, isMulti) => {
     setSelectedOptions(prev => {
@@ -160,23 +175,70 @@ function App() {
 
   const selectedServices = services.filter(s => selected.includes(s.name));
 
+  useEffect(() => {
+    // Load templates
+    fetch('/templates/header.tpl').then(resp => {
+      if (!resp.ok) return;
+
+      return resp.text();
+    })
+    .then(setTemplatedHeaderHtml)
+    .catch(() => {
+      setTemplatedHeaderHtml('');
+    });
+
+    // Load questions
+    fetch('/questions.json').then(resp => {
+      if (!resp.ok) throw new Error("Unable to load questions!");
+
+      return resp.json();
+    })
+    .then(setQuestions)
+    .catch(error => {
+      console.error('Error loading questions JSON:', error);
+    });
+
+    // Load services
+    fetch('/services.json').then(resp => {
+      if (!resp.ok) throw new Error("Unable to load services!");
+
+      return resp.json();
+    })
+    .then(setServices)
+    .catch(error => {
+      console.error('Error loading services JSON:', error);
+    })
+
+    setIsLoading(false);
+  },[isLoading]);
+
   return (
-    <div className="d-flex flex-column flex-md-row min-vh-100">
-      <Sidebar
-        questions={questions}
-        selectedOptions={selectedOptions}
-        onSelect={handleOptionSelect}
-        onClear={handleClear}
-      />
-      <main className="flex-grow-1 p-4 overflow-auto">
-        <ServiceList
-          services={services}
-          selectedOptions={selectedOptions}
-          selected={selected}
-          toggleSelect={toggleSelect}
-        />
-        <ComparisonTable selectedServices={selectedServices} />
-      </main>
+    <div>
+      {
+        isLoading ? (<LoadingScreen />) : (
+          <>
+            <div dangerouslySetInnerHTML={ { __html: templatedHeaderHtml }}></div>
+
+            <div className="d-flex flex-column flex-md-row min-vh-100">
+              <Sidebar
+                questions={questions}
+                selectedOptions={selectedOptions}
+                onSelect={handleOptionSelect}
+                onClear={handleClear}
+              />
+              <main className="flex-grow-1 p-4 overflow-auto">
+                <ServiceList
+                  services={services}
+                  selectedOptions={selectedOptions}
+                  selected={selected}
+                  toggleSelect={toggleSelect}
+                />
+                <ComparisonTable selectedServices={selectedServices} />
+              </main>
+            </div>
+          </>
+        )            
+      }
     </div>
   );
 }

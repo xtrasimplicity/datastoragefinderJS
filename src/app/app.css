@@ -18,3 +18,14 @@
   color: white;
   border-color: #005a9e;
 }
+
+.loading-screen {
+  animation: fadeIn 0.6s ease-in-out forwards;
+  opacity: 0;
+}
+
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+  }
+}
