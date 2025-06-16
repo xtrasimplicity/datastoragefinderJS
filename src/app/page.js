@@ -24,7 +24,7 @@ function Sidebar({ questions, selectedOptions, onSelect, onClear }) {
               ?
             </button>
           </div>
-          {visibleTips[q.id] && <div className="alert alert-info mt-2">{q.helpTip}</div>}
+          {visibleTips[q.id] && <div className="alert alert-info mt-2" dangerouslySetInnerHTML={{ __html: q.helpTip }}></div>}
           <div className="d-flex flex-wrap gap-2 mt-2">
             {q.options.map(opt => {
               const isSelected = q.multi
