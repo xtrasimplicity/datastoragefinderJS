@@ -2,6 +2,7 @@
 services:
   app:
     image: xtrasimplicity/data-storage-finder:latest
-    build: .
+    build:
+      context: docker-build
     ports:
      - 8000:80
