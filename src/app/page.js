@@ -51,7 +51,7 @@ function Sidebar({ questions, selectedOptions, onSelect, onClear }) {
 function ServiceList({ services, selectedOptions, selected, toggleSelect }) {
   const isCompatible = (service) => {
     return Object.entries(selectedOptions).every(([key, value]) => {
-      if (!value) return true;
+      if (!value || (Array.isArray(value) && value.length === 0)) return true;
       const criteria = service.criteria[key];
       if (!criteria) return false;
       if (Array.isArray(value)) {
