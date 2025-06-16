@@ -1,4 +1,5 @@
 "use client";
+import "bootstrap/dist/css/bootstrap.min.css";
 import './app.css';
 import { useState } from 'react';
 import questions from './questions.json';
@@ -12,29 +13,37 @@ function Sidebar({ questions, selectedOptions, onSelect, onClear }) {
   };
 
   return (
-    <div className="sidebar">
-      <button className="clear-button" onClick={onClear}>Clear All</button>
+    <div className="p-3 border-end bg-light" style={{ minWidth: "300px" }}>
+      <button className="btn btn-outline-danger mb-3" onClick={onClear}>Clear All</button>
       {questions.map(q => (
-        <div key={q.id} className="question-block">
-          <div className="question-header">
-            <h4>{q.label} <button className="help-icon" onClick={() => toggleTip(q.id)}>?</button></h4>
+        <div key={q.id} className="mb-4">
+          <div className="d-flex align-items-center justify-content-between mb-1">
+            <h5 className="mb-0">{q.label}</h5>
+            <button
+              className="btn btn-sm btn-outline-secondary ms-2"
+              onClick={() => toggleTip(q.id)}
+            >
+              ?
+            </button>
           </div>
-          {visibleTips[q.id] && <div className="help-tip">{q.helpTip}</div>}
-          {q.options.map(opt => {
-            const isSelected = q.multi
-              ? selectedOptions[q.id]?.includes(opt.slug)
-              : selectedOptions[q.id] === opt.slug;
+          {visibleTips[q.id] && <div className="alert alert-info mt-2">{q.helpTip}</div>}
+          <div className="d-flex flex-wrap gap-2 mt-2">
+            {q.options.map(opt => {
+              const isSelected = q.multi
+                ? selectedOptions[q.id]?.includes(opt.slug)
+                : selectedOptions[q.id] === opt.slug;
 
-            return (
-              <button
-                key={opt.slug}
-                className={`option-button ${isSelected ? 'selected' : ''}`}
-                onClick={() => onSelect(q.id, opt.slug, q.multi)}
-              >
-                {opt.text}
-              </button>
-            );
-          })}
+              return (
+                <button
+                  key={opt.slug}
+                  className={`option-button ${isSelected ? "selected" : ""}`}
+                  onClick={() => onSelect(q.id, opt.slug, q.multi)}
+                >
+                  {opt.text}
+                </button>
+              );
+            })}
+          </div>
         </div>
       ))}
     </div>
@@ -55,17 +64,19 @@ function ServiceList({ services, selectedOptions, selected, toggleSelect }) {
   };
 
   return (
-    <div className="service-list">
+    <div className="row g-3">
       {services.map(service => {
         const compatible = isCompatible(service);
         return (
-          <div
-            key={service.name}
-            className={`service-card ${selected.includes(service.name) ? 'selected' : ''} ${compatible ? '' : 'disabled'}`}
-            onClick={() => compatible && toggleSelect(service.name)}
-          >
-            <h3>{service.name}</h3>
-            <p>{service.description}</p>
+          <div key={service.name} className="col-12 col-md-6 col-lg-4">
+            <div className={`card h-100 ${selected.includes(service.name) ? "border-primary" : ""} ${!compatible ? "opacity-50" : "cursor-pointer"}`}
+                 style={{ cursor: compatible ? "pointer" : "not-allowed" }}
+                 onClick={() => compatible && toggleSelect(service.name)}>
+              <div className="card-body">
+                <h5 className="card-title">{service.name}</h5>
+                <p className="card-text">{service.description}</p>
+              </div>
+            </div>
           </div>
         );
       })}
@@ -91,28 +102,30 @@ function ComparisonTable({ selectedServices }) {
   ];
 
   return (
-    <div className="comparison-table">
-      <h2>Service Comparison</h2>
-      <table>
-        <thead>
-          <tr>
-            <th>Attribute</th>
-            {selectedServices.map(service => (
-              <th key={service.name}>{service.name}</th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {attributes.map(attr => (
-            <tr key={attr.key}>
-              <td>{attr.label}</td>
-              {selectedServices.map(service => (
-                <td key={service.name} dangerouslySetInnerHTML={ { __html: service.details[attr.key] }}></td>
+    <div className="mt-5">
+      <h2 className="mb-3">Service Comparison</h2>
+      <div className="table-responsive">
+        <table className="table table-bordered align-middle">
+          <thead className="table-light">
+            <tr>
+              <th>Attribute</th>
+              {selectedServices.map((service) => (
+                <th key={service.name}>{service.name}</th>
               ))}
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {attributes.map(attr => (
+              <tr key={attr.key}>
+                <th scope="row">{attr.label}</th>
+                {selectedServices.map(service => (
+                  <td key={service.name} dangerouslySetInnerHTML={{ __html: service.details[attr.key] }}></td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }
@@ -148,14 +161,14 @@ function App() {
   const selectedServices = services.filter(s => selected.includes(s.name));
 
   return (
-    <div className="app-container">
+    <div className="d-flex flex-column flex-md-row min-vh-100">
       <Sidebar
         questions={questions}
         selectedOptions={selectedOptions}
         onSelect={handleOptionSelect}
         onClear={handleClear}
       />
-      <div className="main-content">
+      <main className="flex-grow-1 p-4 overflow-auto">
         <ServiceList
           services={services}
           selectedOptions={selectedOptions}
@@ -163,7 +176,7 @@ function App() {
           toggleSelect={toggleSelect}
         />
         <ComparisonTable selectedServices={selectedServices} />
-      </div>
+      </main>
     </div>
   );
 }

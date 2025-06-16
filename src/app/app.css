@@ -1,17 +1,3 @@
-.app-container {
-  display: flex;
-  height: 100vh;
-  font-family: Arial, sans-serif;
-}
-
-.sidebar {
-  width: 300px;
-  overflow-y: auto;
-  background: #f4f4f4;
-  padding: 1rem;
-  border-right: 1px solid #ccc;
-}
-
 .question-block {
   margin-bottom: 1.5rem;
 }
@@ -31,66 +17,4 @@
   background: #0078d4;
   color: white;
   border-color: #005a9e;
-}
-
-.main-content {
-  flex: 1;
-  padding: 1rem;
-  overflow-y: auto;
-}
-
-.service-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-  margin-bottom: 2rem;
-}
-
-.service-card {
-  width: 250px;
-  padding: 1rem;
-  border: 1px solid #ccc;
-  background: #f9f9f9;
-  cursor: pointer;
-  transition: border-color 0.3s;
-}
-
-.service-card:hover {
-  border-color: #0078d4;
-}
-
-.service-card.selected {
-  border: 2px solid #0078d4;
-  background-color: #eef6ff;
-}
-
-.service-card.disabled {
-  opacity: 0.4;
-  pointer-events: none;
-}
-
-.comparison-table {
-  margin-top: 2rem;
-  overflow-x: auto;
-}
-
-.comparison-table h2 {
-  margin-bottom: 1rem;
-}
-
-.comparison-table table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.comparison-table th,
-.comparison-table td {
-  border: 1px solid #ccc;
-  padding: 0.75rem;
-  text-align: left;
-  vertical-align: top;
-}
-
-.comparison-table th {
-  background-color: #f0f0f0;
 }
