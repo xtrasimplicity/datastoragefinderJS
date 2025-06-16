@@ -145,6 +145,7 @@ function App() {
   const [selected, setSelected] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [templatedHeaderHtml, setTemplatedHeaderHtml] = useState('');
+  const [templatedFooterHtml, setTemplatedFooterHtml] = useState('');
   const [questions, setQuestions] = useState([]);
   const [services, setServices] = useState([]);
 
@@ -187,6 +188,16 @@ function App() {
       setTemplatedHeaderHtml('');
     });
 
+    fetch('/templates/footer.tpl').then(resp => {
+      if (!resp.ok) return;
+
+      return resp.text();
+    })
+    .then(setTemplatedFooterHtml)
+    .catch(() => {
+      setTemplatedFooterHtml('');
+    });
+
     // Load questions
     fetch('/questions.json').then(resp => {
       if (!resp.ok) throw new Error("Unable to load questions!");
@@ -218,8 +229,7 @@ function App() {
         isLoading ? (<LoadingScreen />) : (
           <>
             <div dangerouslySetInnerHTML={ { __html: templatedHeaderHtml }}></div>
-
-            <div className="d-flex flex-column flex-md-row min-vh-100">
+            <div className="d-flex flex-column flex-md-row min-vh-100 pb-5">
               <Sidebar
                 questions={questions}
                 selectedOptions={selectedOptions}
@@ -236,6 +246,7 @@ function App() {
                 <ComparisonTable selectedServices={selectedServices} />
               </main>
             </div>
+            <div dangerouslySetInnerHTML={ { __html: templatedFooterHtml }}></div>
           </>
         )            
       }
