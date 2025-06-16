@@ -10,6 +10,7 @@
       "accessMethod": ["easy_access_no_vpn"]
     },
     "details": {
+      "description": "Cloud-hosted version control using Git. GitHub is primarily used for storing software code and scripts, and offers collaborative features.",
       "exampleUse": "Collaborative software development and version control.",
       "cost": "Free for internal use; premium features may incur cost.",
       "capacity": "Depends on repository size limits.",
@@ -33,6 +34,7 @@
       "accessMethod": ["office_or_vpn"]
     },
     "details": {
+      "description": "",
       "exampleUse": "Storing personal work files securely.",
       "cost": "Included in IT services.",
       "capacity": "Limited per user quota.",
@@ -56,6 +58,7 @@
       "accessMethod": ["office_or_vpn"]
     },
     "details": {
+      "description": "",
       "exampleUse": "Securely transferring sensitive files.",
       "cost": "No cost for internal transfers.",
       "capacity": "Depends on server configuration.",

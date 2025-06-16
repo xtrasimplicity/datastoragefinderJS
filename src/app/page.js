@@ -77,6 +77,7 @@ function ComparisonTable({ selectedServices }) {
   if (selectedServices.length === 0) return null;
 
   const attributes = [
+    { key: 'description', label: 'Description' },
     { key: 'exampleUse', label: 'Example Use' },
     { key: 'cost', label: 'Cost' },
     { key: 'capacity', label: 'Capacity' },
