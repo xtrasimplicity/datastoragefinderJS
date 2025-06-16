@@ -107,7 +107,7 @@ function ComparisonTable({ selectedServices }) {
             <tr key={attr.key}>
               <td>{attr.label}</td>
               {selectedServices.map(service => (
-                <td key={service.name}>{service.details[attr.key]}</td>
+                <td key={service.name} dangerouslySetInnerHTML={ { __html: service.details[attr.key] }}></td>
               ))}
             </tr>
           ))}
