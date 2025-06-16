@@ -1,6 +1,7 @@
 ---
 services:
   app:
+    image: xtrasimplicity/data-storage-finder:latest
     build: .
     ports:
      - 8000:80
