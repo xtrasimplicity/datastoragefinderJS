@@ -69,7 +69,7 @@ function ServiceList({ services, selectedOptions, selected, toggleSelect }) {
         const compatible = isCompatible(service);
         return (
           <div key={service.name} className="col-12 col-md-6 col-lg-4">
-            <div className={`card h-100 ${selected.includes(service.name) ? "border-primary" : ""} ${!compatible ? "opacity-50" : "cursor-pointer"}`}
+            <div className={`card h-100 ${selected.includes(service.name) ? "border-primary" : ""} ${!compatible ? "opacity-25" : "cursor-pointer"}`}
                  style={{ cursor: compatible ? "pointer" : "not-allowed" }}
                  onClick={() => compatible && toggleSelect(service.name)}>
               <div className="card-body">
