@@ -119,8 +119,26 @@ function ServiceList({ services, selectedOptions, selected, toggleSelect }) {
   );
 }
 
-function ComparisonTable({ selectedServices, selectedOptions }) {
+function ComparisonTable({ selectedServices, selectedOptions, dataClassifications }) {
   if (selectedServices.length === 0) return null;
+
+  const fetchClassificationsValue = (service) => {
+    // Get selected classification slug
+    const selectedClassificationSlugs = selectedOptions['classification'];
+    var classificationsString = "<ul>";
+
+    if (!service.criteria) return "";
+    if (!service.criteria.classification) return;
+
+    service.criteria.classification.forEach((classificationSlug) => {
+      const classificationName = dataClassifications[classificationSlug];
+      classificationsString = classificationsString + "<li>" + classificationName + "</li>";
+    });
+
+    classificationsString = classificationsString + "</ul><br /><strong class='caveat-warning'>Note: Caveats may exist for some of these classifications. Before using this service, please select the classification of your data using this tool and review the caveats listed.";
+    
+    return classificationsString;
+  };
 
   const fetchCaveatsValue = (service) => {
     const caveats = GetCaveats(service, selectedOptions);
@@ -144,7 +162,7 @@ function ComparisonTable({ selectedServices, selectedOptions }) {
     { key: 'cost', label: 'Cost' },
     { key: 'capacity', label: 'Capacity' },
     { key: 'access', label: 'Access & Collaboration' },
-    { key: 'classifications', label: 'Data Classifications Allowed' },
+    { key: 'classifications', label: 'Data Classifications Allowed', valueGetterFn: fetchClassificationsValue },
     { key: 'caveats', label: 'Caveats', valueGetterFn: fetchCaveatsValue },
     { key: 'durability', label: 'Durability' },
     { key: 'availability', label: 'Availability' },
@@ -279,6 +297,26 @@ function App() {
     setIsLoading(false);
   },[isLoading]);
 
+
+  const dataClassifications = (() => {
+    var classificationQuestion = null;
+    const classificationQuestionArr = questions.filter(q => q.id == "classification");
+    
+    if (!classificationQuestionArr || classificationQuestionArr.length == 0) return {};
+    
+    classificationQuestion = classificationQuestionArr[0];
+
+    if (!classificationQuestion.options || classificationQuestion.options.length == 0) return {};
+
+    var classifications = {};
+
+    classificationQuestion.options.forEach((option) => {
+      classifications[option.slug] = option.text;
+    });
+
+    return classifications;    
+  })();
+
   return (
     <div>
       {
@@ -299,7 +337,7 @@ function App() {
                   selected={selected}
                   toggleSelect={toggleSelect}
                 />
-                <ComparisonTable selectedServices={selectedServices} selectedOptions={selectedOptions} />
+                <ComparisonTable selectedServices={selectedServices} selectedOptions={selectedOptions} dataClassifications={dataClassifications} />
               </main>
             </div>
             <div dangerouslySetInnerHTML={ { __html: templatedFooterHtml }}></div>
