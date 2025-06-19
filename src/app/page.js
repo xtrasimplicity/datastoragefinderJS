@@ -70,7 +70,7 @@ function Sidebar({ questions, selectedOptions, onSelect, onClear }) {
   );
 }
 
-function ServiceList({ services, selectedOptions, selected, toggleSelect }) {
+function ServiceList({ services, selectedOptions, selected, toggleSelect, onClear }) {
   const isCompatible = (service) => {
     return Object.entries(selectedOptions).every(([key, value]) => {
       if (!value || (Array.isArray(value) && value.length === 0)) return true;
@@ -84,38 +84,43 @@ function ServiceList({ services, selectedOptions, selected, toggleSelect }) {
   };
 
   return (
-    <div className="row g-3">
-      {services.map(service => {
-        const compatible = isCompatible(service);
-        const caveats = compatible ? GetCaveats(service, selectedOptions) : [];
+    <>
+      <div className="d-flex justify-content-end mb-3">
+        <button className="btn btn-outline-danger" onClick={onClear}>Clear Selections</button>
+      </div>
+      <div className="row g-3">
+        {services.map(service => {
+          const compatible = isCompatible(service);
+          const caveats = compatible ? GetCaveats(service, selectedOptions) : [];
 
-        return (
-          <div key={service.name} className="col-12 col-md-6 col-lg-4 service">
-            <div className={`card h-100 ${selected.includes(service.name) ? "border-primary" : ""} ${!compatible ? "opacity-25" : "cursor-pointer"}`}
-                 style={{ cursor: compatible ? "pointer" : "not-allowed" }}
-                 onClick={() => compatible && toggleSelect(service.name)}>
-              <div className="card-body">
-                <h5 className="card-title">
-                  {service.name}
-                  { caveats.length > 0 && <span className="caveat-asterisk">*</span>}
-                </h5>
-                <p className="card-text">{service.description}</p>
-                { caveats.length > 0 && 
-                    <div className="card-text">
-                      <span className="caveat-warning">Note: The following caveats exist when using this service:</span>
-                      <ul className="caveat-warning-list">
-                        { caveats.map((caveat) => {
-                            return <li key={ "service_" + service.name + "_caveat_" + caveat.title }>{caveat.title}</li>
-                        })}
-                      </ul>
-                    </div> 
-                  }
+          return (
+            <div key={service.name} className="col-12 col-md-6 col-lg-4 service">
+              <div className={`card h-100 ${selected.includes(service.name) ? "border-primary" : ""} ${!compatible ? "opacity-25" : "cursor-pointer"}`}
+                  style={{ cursor: compatible ? "pointer" : "not-allowed" }}
+                  onClick={() => compatible && toggleSelect(service.name)}>
+                <div className="card-body">
+                  <h5 className="card-title">
+                    {service.name}
+                    { caveats.length > 0 && <span className="caveat-asterisk">*</span>}
+                  </h5>
+                  <p className="card-text">{service.description}</p>
+                  { caveats.length > 0 && 
+                      <div className="card-text">
+                        <span className="caveat-warning">Note: The following caveats exist when using this service:</span>
+                        <ul className="caveat-warning-list">
+                          { caveats.map((caveat) => {
+                              return <li key={ "service_" + service.name + "_caveat_" + caveat.title }>{caveat.title}</li>
+                          })}
+                        </ul>
+                      </div> 
+                    }
+                </div>
               </div>
             </div>
-          </div>
-        );
-      })}
-    </div>
+          );
+        })}
+      </div>
+    </>
   );
 }
 
@@ -243,10 +248,14 @@ function App() {
     );
   };
 
-  const handleClear = () => {
+  const handleClearAnswers = () => {
     setSelectedOptions({});
-    setSelected([]);
+    handleClearSelectedServices();
   };
+
+  const handleClearSelectedServices = () => {
+    setSelected([]);
+  }
 
   const selectedServices = services.filter(s => selected.includes(s.name));
 
@@ -328,14 +337,15 @@ function App() {
                 questions={questions}
                 selectedOptions={selectedOptions}
                 onSelect={handleOptionSelect}
-                onClear={handleClear}
+                onClear={handleClearAnswers}
               />
               <main className="flex-grow-1 p-4 overflow-auto">
                 <ServiceList
                   services={services}
                   selectedOptions={selectedOptions}
                   selected={selected}
-                  toggleSelect={toggleSelect}
+                  toggleSelect={toggleSelect} 
+                  onClear={handleClearSelectedServices}
                 />
                 <ComparisonTable selectedServices={selectedServices} selectedOptions={selectedOptions} dataClassifications={dataClassifications} />
               </main>
