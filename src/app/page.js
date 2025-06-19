@@ -163,7 +163,7 @@ function ComparisonTable({ selectedServices, selectedOptions, dataClassification
     { key: 'capacity', label: 'Capacity' },
     { key: 'access', label: 'Access & Collaboration' },
     { key: 'classifications', label: 'Data Classifications Allowed', valueGetterFn: fetchClassificationsValue },
-    { key: 'caveats', label: 'Caveats', valueGetterFn: fetchCaveatsValue },
+    { key: 'caveats', label: 'Caveats (based on selections)', valueGetterFn: fetchCaveatsValue },
     { key: 'durability', label: 'Durability' },
     { key: 'availability', label: 'Availability' },
     { key: 'complexity', label: 'Technical Complexity' },
