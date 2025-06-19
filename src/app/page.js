@@ -3,6 +3,28 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import './app.css';
 import { useState, useEffect } from 'react';
 
+function GetCaveats(service, selectedOptions) {
+  const matches = [];
+  if (!service.caveats) return matches;
+
+  for (const [questionId, caveatInfo] of Object.entries(service.caveats)) {
+    const selectedValue = selectedOptions[questionId];
+
+    if (!selectedValue) continue;
+
+    const selectedValues = Array.isArray(selectedValue) ? selectedValue : [selectedValue];
+
+    const intersection = selectedValues.filter(val => caveatInfo.criteria.includes(val));
+
+    if (intersection.length > 0) {
+      matches.push(caveatInfo.caveat);
+    }
+  }
+
+  return matches;
+}
+
+
 function Sidebar({ questions, selectedOptions, onSelect, onClear }) {
   const [visibleTips, setVisibleTips] = useState({});
 
@@ -65,14 +87,29 @@ function ServiceList({ services, selectedOptions, selected, toggleSelect }) {
     <div className="row g-3">
       {services.map(service => {
         const compatible = isCompatible(service);
+        const caveats = compatible ? GetCaveats(service, selectedOptions) : [];
+
         return (
-          <div key={service.name} className="col-12 col-md-6 col-lg-4">
+          <div key={service.name} className="col-12 col-md-6 col-lg-4 service">
             <div className={`card h-100 ${selected.includes(service.name) ? "border-primary" : ""} ${!compatible ? "opacity-25" : "cursor-pointer"}`}
                  style={{ cursor: compatible ? "pointer" : "not-allowed" }}
                  onClick={() => compatible && toggleSelect(service.name)}>
               <div className="card-body">
-                <h5 className="card-title">{service.name}</h5>
+                <h5 className="card-title">
+                  {service.name}
+                  { caveats.length > 0 && <span className="caveat-asterisk">*</span>}
+                </h5>
                 <p className="card-text">{service.description}</p>
+                { caveats.length > 0 && 
+                    <div className="card-text">
+                      <span className="caveat-warning">Note: The following caveats exist when using this service:</span>
+                      <ul className="caveat-warning-list">
+                        { caveats.map((caveat) => {
+                            return <li key={ "service_" + service.name + "_caveat_" + caveat.title }>{caveat.title}</li>
+                        })}
+                      </ul>
+                    </div> 
+                  }
               </div>
             </div>
           </div>
@@ -82,8 +119,24 @@ function ServiceList({ services, selectedOptions, selected, toggleSelect }) {
   );
 }
 
-function ComparisonTable({ selectedServices }) {
+function ComparisonTable({ selectedServices, selectedOptions }) {
   if (selectedServices.length === 0) return null;
+
+  const fetchCaveatsValue = (service) => {
+    const caveats = GetCaveats(service, selectedOptions);
+
+    if (caveats.length == 0) return "None";
+
+    var caveatString = "Based on the answers you've selected, the following caveats/conditions apply to the use of this service with your data.<ul class='caveat-warning-list'>";
+    
+    caveats.forEach((caveat) => {
+      caveatString = caveatString + "<li>" + caveat.description + "</li>";
+    })
+
+    caveatString = caveatString + "</ul>";
+
+    return "<span class='caveat-warning'>" + caveatString + "</span>";
+  };
 
   const attributes = [
     { key: 'description', label: 'Description' },
@@ -92,6 +145,7 @@ function ComparisonTable({ selectedServices }) {
     { key: 'capacity', label: 'Capacity' },
     { key: 'access', label: 'Access & Collaboration' },
     { key: 'classifications', label: 'Data Classifications Allowed' },
+    { key: 'caveats', label: 'Caveats', valueGetterFn: fetchCaveatsValue },
     { key: 'durability', label: 'Durability' },
     { key: 'availability', label: 'Availability' },
     { key: 'complexity', label: 'Technical Complexity' },
@@ -102,7 +156,7 @@ function ComparisonTable({ selectedServices }) {
   return (
     <div className="mt-5">
       <h2 className="mb-3">Service Comparison</h2>
-      <div className="table-responsive">
+      <div className="table-responsive comparison-table">
         <table className="table table-bordered align-middle">
           <thead className="table-light">
             <tr>
@@ -116,9 +170,11 @@ function ComparisonTable({ selectedServices }) {
             {attributes.map(attr => (
               <tr key={attr.key}>
                 <th scope="row">{attr.label}</th>
-                {selectedServices.map(service => (
-                  <td key={service.name} dangerouslySetInnerHTML={{ __html: service.details[attr.key] }}></td>
-                ))}
+                {selectedServices.map(service => {
+                  const value =  attr.valueGetterFn ? attr.valueGetterFn(service) :  service.details[attr.key];
+
+                  return (<td key={service.name} dangerouslySetInnerHTML={{ __html: value }}></td>);   
+                })}
               </tr>
             ))}
           </tbody>
@@ -243,7 +299,7 @@ function App() {
                   selected={selected}
                   toggleSelect={toggleSelect}
                 />
-                <ComparisonTable selectedServices={selectedServices} />
+                <ComparisonTable selectedServices={selectedServices} selectedOptions={selectedOptions} />
               </main>
             </div>
             <div dangerouslySetInnerHTML={ { __html: templatedFooterHtml }}></div>

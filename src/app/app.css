@@ -29,3 +29,24 @@
     opacity: 1;
   }
 }
+
+.service {
+  .caveat-asterisk, .caveat-warning, .caveat-warning-list {
+    color: #FF0000;
+  }
+
+  .caveat-asterisk {
+    padding-left: 5px;
+    font-weight: bold;
+  }
+  .caveat-warning {
+    font-weight: bold;
+    font-style: italic;
+  }
+}
+
+.comparison-table {
+  .caveat-warning, .caveat-warning-list {
+    color: #FF0000;
+  }
+}

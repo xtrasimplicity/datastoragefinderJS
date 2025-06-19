@@ -27,11 +27,20 @@
     "name": "Personal Network Drive",
     "description": "Private network storage for individual users.",
     "criteria": {
-      "classification": ["sensitive_moderate_risk", "confidential_or_restricted_high_risk"],
+      "classification": ["public_low_risk", "sensitive_moderate_risk", "confidential_or_restricted_high_risk"],
       "accessFrequency": ["occasionally", "rarely"],
       "sharing": ["only_me"],
       "volumeGrowth": ["small_amount_data_unlikely_to_grow"],
       "accessMethod": ["office_or_vpn"]
+    },
+     "caveats": {
+      "classification": {
+        "criteria": ["sensitive_moderate_risk", "confidential_or_restricted_high_risk", "payment_information_extreme_risk"],
+        "caveat": {
+          "title": "Encryption required",
+          "description": "Encryption of sensitive files is required. Contact IT for assistance."
+        }
+      }
     },
     "details": {
       "description": "",
