@@ -1,7 +1,98 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# DataStorageFinderJS
+_A flexible, JSON-backed Data storage finder tool written in JavaScript._
 
-## Getting Started
+## Usage
+An example docker-compose YML file can be found below.
+```
+---
+services:
+  app:
+    restart: unless-stopped
+    image: xtrasimplicity/data-storage-finder:latest
+    volumes:
+      - /etc/localtime:/etc/localtime
+      - ./questions.json:/usr/share/nginx/html/questions.json
+      - ./services.json:/usr/share/nginx/html/services.json
+      - ./templates:/usr/share/nginx/html/templates/
+    ports:
+      - 3000:80
+```
 
+Define your questions in `questions.json`, as below:
+```
+[
+  [
+  {
+    "id": "classification",
+    "label": "What is the classification of your data?",
+    "helpTip": "This refers to the sensitivity and risk level of the data you are working with.",
+    "multi": false,
+    "options": [
+      { "text": "Public / Low Risk", "slug": "public_low_risk" },
+      { "text": "Sensitive / Moderate Risk", "slug": "sensitive_moderate_risk" },
+      { "text": "Confidential or Restricted / High Risk", "slug": "confidential_or_restricted_high_risk" },
+      { "text": "Payment Information / Extreme Risk", "slug": "payment_information_extreme_risk" }
+    ]
+  },
+  {
+    "id": "accessFrequency",
+    "label": "How often is the data expected to be accessed/modified?",
+    "helpTip": "This helps determine the performance and availability requirements.",
+    "multi": false,
+    "options": [
+      { "text": "Frequently", "slug": "frequently" },
+      { "text": "Occasionally", "slug": "occasionally" },
+      { "text": "Rarely", "slug": "rarely" },
+      { "text": "Just Once", "slug": "just_once" }
+    ]
+  }
+]
+```
+
+Define your services in `services.json`, as below:
+```
+[
+  {
+    "name": "Personal Network Drive",
+    "description": "Private network storage for individual users.",
+    "criteria": {
+      "classification": ["public_low_risk", "sensitive_moderate_risk", "confidential_or_restricted_high_risk"],
+      "accessFrequency": ["occasionally", "rarely"],
+      "sharing": ["only_me"],
+      "volumeGrowth": ["small_amount_data_unlikely_to_grow"],
+      "accessMethod": ["office_or_vpn"]
+    },
+     "caveats": {
+      "classification": {
+        "criteria": ["sensitive_moderate_risk", "confidential_or_restricted_high_risk", "payment_information_extreme_risk"],
+        "caveat": {
+          "title": "Encryption required",
+          "description": "Encryption of sensitive files is required. Contact IT for assistance."
+        }
+      }
+    },
+    "details": {
+      "description": "",
+      "exampleUse": "Storing personal work files securely.",
+      "cost": "Included in IT services.",
+      "capacity": "Limited per user quota.",
+      "access": "Mapped drive via VPN or on-prem.",
+      "durability": "Backed up by IT.",
+      "availability": "Subject to IT maintenance.",
+      "complexity": "Low – standard file system.",
+      "support": "support@mycorp.local",
+      "howToAccess": "Provisioned automatically or via IT request."
+    }
+  }
+]
+```
+
+The required `criteria` key for each service handles the filtering, with the value being an object. In the child object, the keys relate to the question IDs specified in `questions.json`, with the values being an array of strings, matching the desired answer `slugs` for the question.
+
+The optional `caveats` key for each service is expected to either be unset, or to be an object. In the object, the keys relate to the question IDs, and the values are an Object which stipulates the criteria and assigned caveats.
+E.g. In the example above, we want to show a caveat "Encryption required" when the classification is set to `sensitive_moderate_risk`, `confidential_or_restricted_high_risk`, or `payment_information_extreme_risk`. The caveat title appears in the service card, and the Caveat description appears in the Comparison Table when the service is selected.
+
+## Development
 First, run the development server:
 
 ```bash
@@ -17,20 +108,3 @@ bun dev
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
 You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
