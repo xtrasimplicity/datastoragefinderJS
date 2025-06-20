@@ -49,42 +49,58 @@ Define your questions in `questions.json`, as below:
 ]
 ```
 
-Define your services in `services.json`, as below:
+Create a file called `services.json`, and define your service attributes (for the data comparison table) and your services, as below:
 ```
-[
-  {
-    "name": "Personal Network Drive",
-    "description": "Private network storage for individual users.",
-    "criteria": {
-      "classification": ["public_low_risk", "sensitive_moderate_risk", "confidential_or_restricted_high_risk"],
-      "accessFrequency": ["occasionally", "rarely"],
-      "sharing": ["only_me"],
-      "volumeGrowth": ["small_amount_data_unlikely_to_grow"],
-      "accessMethod": ["office_or_vpn"]
-    },
-     "caveats": {
-      "classification": {
-        "criteria": ["sensitive_moderate_risk", "confidential_or_restricted_high_risk", "payment_information_extreme_risk"],
-        "caveat": {
-          "title": "Encryption required",
-          "description": "Encryption of sensitive files is required. Contact IT for assistance."
+{
+  "attributes": [
+    { "key": "description", "label": "Description" },
+    { "key": "exampleUse", "label": "Example Use" },
+    { "key": "cost", "label": "Cost" },
+    { "key": "capacity", "label": "Capacity" },
+    { "key": "access", "label": "Access & Collaboration" },
+    { "key": "classifications", "label": "Data Classifications Allowed", "internal": true }, // Note: When internal is set to `true`, the value is determined using buit-in functions. If set to false, or unset, it will use the value defined in the service object.
+    { "key": "caveats", "label": "Caveats (based on selections)", "internal": true },
+    { "key": "durability", "label": "Durability" },
+    { "key": "availability", "label": "Availability" },
+    { "key": "complexity", "label": "Technical Complexity" },
+    { "key": "support", "label": "Support Contact" },
+    { "key": "howToAccess", "label": "How to Access" }
+  ],
+  "services": [
+    {
+      "name": "Personal Network Drive",
+      "description": "Private network storage for individual users.",
+      "criteria": {
+        "classification": ["public_low_risk", "sensitive_moderate_risk", "confidential_or_restricted_high_risk"],
+        "accessFrequency": ["occasionally", "rarely"],
+        "sharing": ["only_me"],
+        "volumeGrowth": ["small_amount_data_unlikely_to_grow"],
+        "accessMethod": ["office_or_vpn"]
+      },
+      "caveats": {
+        "classification": {
+          "criteria": ["sensitive_moderate_risk", "confidential_or_restricted_high_risk", "payment_information_extreme_risk"],
+          "caveat": {
+            "title": "Encryption required",
+            "description": "Encryption of sensitive files is required. Contact IT for assistance."
+          }
         }
+      },
+      "details": {
+        "description": "",
+        "exampleUse": "Storing personal work files securely.",
+        "cost": "Included in IT services.",
+        "capacity": "Limited per user quota.",
+        "access": "Mapped drive via VPN or on-prem.",
+        "durability": "Backed up by IT.",
+        "availability": "Subject to IT maintenance.",
+        "complexity": "Low – standard file system.",
+        "support": "support@mycorp.local",
+        "howToAccess": "Provisioned automatically or via IT request."
       }
-    },
-    "details": {
-      "description": "",
-      "exampleUse": "Storing personal work files securely.",
-      "cost": "Included in IT services.",
-      "capacity": "Limited per user quota.",
-      "access": "Mapped drive via VPN or on-prem.",
-      "durability": "Backed up by IT.",
-      "availability": "Subject to IT maintenance.",
-      "complexity": "Low – standard file system.",
-      "support": "support@mycorp.local",
-      "howToAccess": "Provisioned automatically or via IT request."
     }
-  }
-]
+  ]
+}
 ```
 
 The required `criteria` key for each service handles the filtering, with the value being an object. In the child object, the keys relate to the question IDs specified in `questions.json`, with the values being an array of strings, matching the desired answer `slugs` for the question.

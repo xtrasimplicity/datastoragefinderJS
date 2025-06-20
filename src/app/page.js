@@ -124,7 +124,7 @@ function ServiceList({ services, selectedOptions, selected, toggleSelect, onClea
   );
 }
 
-function ComparisonTable({ selectedServices, selectedOptions, dataClassifications }) {
+function ComparisonTable({ selectedServices, selectedOptions, dataClassifications, serviceAttributeDefinitions }) {
   if (selectedServices.length === 0) return null;
 
   const fetchClassificationsValue = (service) => {
@@ -161,20 +161,19 @@ function ComparisonTable({ selectedServices, selectedOptions, dataClassification
     return "<span class='caveat-warning'>" + caveatString + "</span>";
   };
 
-  const attributes = [
-    { key: 'description', label: 'Description' },
-    { key: 'exampleUse', label: 'Example Use' },
-    { key: 'cost', label: 'Cost' },
-    { key: 'capacity', label: 'Capacity' },
-    { key: 'access', label: 'Access & Collaboration' },
-    { key: 'classifications', label: 'Data Classifications Allowed', valueGetterFn: fetchClassificationsValue },
-    { key: 'caveats', label: 'Caveats (based on selections)', valueGetterFn: fetchCaveatsValue },
-    { key: 'durability', label: 'Durability' },
-    { key: 'availability', label: 'Availability' },
-    { key: 'complexity', label: 'Technical Complexity' },
-    { key: 'support', label: 'Support Contact' },
-    { key: 'howToAccess', label: 'How to Access' }
-  ];
+  const attributes = serviceAttributeDefinitions.map((attr) => {
+    var newAttr = { key: attr.key, label: attr.label };
+    
+    if (attr.internal === true) {
+      if (attr.key == "classifications") {
+        newAttr['valueGetterFn'] = fetchClassificationsValue;
+      } else if (attr.key == "caveats") {
+        newAttr['valueGetterFn'] = fetchCaveatsValue;
+      }
+    }
+
+    return newAttr;
+  });
 
   return (
     <div className="mt-5">
@@ -227,6 +226,7 @@ function App() {
   const [templatedFooterHtml, setTemplatedFooterHtml] = useState('');
   const [questions, setQuestions] = useState([]);
   const [services, setServices] = useState([]);
+  const [serviceAttributeDefinitions, setServiceAttributeDefinitions] = useState([]);
 
 
   const handleOptionSelect = (questionId, optionSlug, isMulti) => {
@@ -299,7 +299,12 @@ function App() {
 
       return resp.json();
     })
-    .then(setServices)
+    .then((payload) => {
+      if (!payload.services) throw new Error("Services.json doesn't have a `services` property.");
+      
+      setServices(payload.services);
+      setServiceAttributeDefinitions(payload.attributes);
+    })
     .catch(error => {
       console.error('Error loading services JSON:', error);
     })
@@ -348,7 +353,7 @@ function App() {
                   toggleSelect={toggleSelect} 
                   onClear={handleClearSelectedServices}
                 />
-                <ComparisonTable selectedServices={selectedServices} selectedOptions={selectedOptions} dataClassifications={dataClassifications} />
+                <ComparisonTable selectedServices={selectedServices} selectedOptions={selectedOptions} dataClassifications={dataClassifications} serviceAttributeDefinitions={serviceAttributeDefinitions} />
               </main>
             </div>
             <div dangerouslySetInnerHTML={ { __html: templatedFooterHtml }}></div>
