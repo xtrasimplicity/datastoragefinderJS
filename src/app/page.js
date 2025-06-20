@@ -230,6 +230,7 @@ function App() {
 
 
   const handleOptionSelect = (questionId, optionSlug, isMulti) => {
+    handleClearSelectedServices();
     setSelectedOptions(prev => {
       if (!isMulti) {
         return { ...prev, [questionId]: prev[questionId] === optionSlug ? null : optionSlug };
