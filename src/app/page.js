@@ -301,6 +301,7 @@ function App() {
     })
     .then((payload) => {
       if (!payload.services) throw new Error("Services.json doesn't have a `services` property.");
+      if (!payload.attributes) throw new Error("Services.json doesn't have an `attributes` property.");
       
       setServices(payload.services);
       setServiceAttributeDefinitions(payload.attributes);
