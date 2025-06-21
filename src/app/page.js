@@ -355,7 +355,7 @@ function App() {
             setInitialisationErrors(errors);
            });
 
-  },[isLoading]);
+  },[isLoading, questions, services]);
 
 
   const dataClassifications = (() => {
@@ -382,8 +382,8 @@ function App() {
       <div className="d-flex flex-column justify-content-center align-items-center">
         {
           initialisationErrors.map((error, errorId) => (
-            <div className="row">
-              <div key={errorId} className="alert alert-danger" role="alert">
+            <div key={"error_" + errorId} className="row">
+              <div className="alert alert-danger" role="alert">
               {error}
               </div>
             </div>
