@@ -291,7 +291,10 @@ function App() {
     })
     .then(setQuestions)
     .catch(error => {
-      console.error('Error loading questions JSON:', error);
+      const message = 'Error loading questions JSON:' + error;
+
+      console.error(message);
+      errors.push(message);
     });
 
     // Load services
@@ -308,7 +311,10 @@ function App() {
       setServiceAttributeDefinitions(payload.attributes);
     })
     .catch(error => {
-      console.error('Error loading services JSON:', error);
+      const message = 'Error loading services JSON:' + error;
+
+      console.error(message);
+      errors.push(message);
     })
 
     var errors = [];
@@ -355,7 +361,7 @@ function App() {
             setInitialisationErrors(errors);
            });
 
-  },[isLoading, questions, services]);
+  },[isLoading]);
 
 
   const dataClassifications = (() => {
