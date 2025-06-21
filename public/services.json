@@ -46,7 +46,7 @@
         "accessFrequency": ["occasionally", "rarely"],
         "sharing": ["only_me"],
         "volumeGrowth": ["small_amount_data_unlikely_to_grow"],
-        "accessMethod": ["office_or_vpn"]
+        "accessMethod": ["office_or_vpn_access"]
       },
       "caveats": {
         "classification": {
@@ -78,7 +78,7 @@
         "accessFrequency": ["just_once", "rarely"],
         "sharing": ["staff_students_external_collaborators"],
         "volumeGrowth": ["large_amount_data_unlikely_to_grow"],
-        "accessMethod": ["office_or_vpn"]
+        "accessMethod": ["office_or_vpn_access"]
       },
       "details": {
         "description": "",

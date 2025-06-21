@@ -227,6 +227,7 @@ function App() {
   const [questions, setQuestions] = useState([]);
   const [services, setServices] = useState([]);
   const [serviceAttributeDefinitions, setServiceAttributeDefinitions] = useState([]);
+  const [initialisationErrors, setInitialisationErrors] = useState([]);
 
 
   const handleOptionSelect = (questionId, optionSlug, isMulti) => {
@@ -262,7 +263,7 @@ function App() {
 
   useEffect(() => {
     // Load templates
-    fetch('/templates/header.tpl').then(resp => {
+    const fetchHeaderTemplate = fetch('/templates/header.tpl').then(resp => {
       if (!resp.ok) return;
 
       return resp.text();
@@ -272,7 +273,7 @@ function App() {
       setTemplatedHeaderHtml('');
     });
 
-    fetch('/templates/footer.tpl').then(resp => {
+    const fetchFooterTemplate = fetch('/templates/footer.tpl').then(resp => {
       if (!resp.ok) return;
 
       return resp.text();
@@ -283,7 +284,7 @@ function App() {
     });
 
     // Load questions
-    fetch('/questions.json').then(resp => {
+    const fetchQuestions = fetch('/questions.json').then(resp => {
       if (!resp.ok) throw new Error("Unable to load questions!");
 
       return resp.json();
@@ -294,7 +295,7 @@ function App() {
     });
 
     // Load services
-    fetch('/services.json').then(resp => {
+    const fetchServices = fetch('/services.json').then(resp => {
       if (!resp.ok) throw new Error("Unable to load services!");
 
       return resp.json();
@@ -310,7 +311,50 @@ function App() {
       console.error('Error loading services JSON:', error);
     })
 
-    setIsLoading(false);
+    var errors = [];
+    Promise.all([fetchHeaderTemplate, fetchFooterTemplate, fetchQuestions, fetchServices])
+           .then(() => {
+            // Check criteria values against the different answer slugs to ensure that there are no erroneous criteria rules in services.json
+            services.forEach(service => {
+              var warningMessagePrefix = "Error: Service '" + service.name + "' ";
+
+              if (!service.criteria) {
+                errors.push(warningMessagePrefix + "does not have criteria defined.");
+                return;
+              }
+
+              for (const [criteriaId, slugs] of Object.entries(service.criteria)) {
+                const matchingQuestions = questions.filter(q => q.id == criteriaId);
+
+                if (!matchingQuestions || matchingQuestions.length == 0) {
+                  errors.push(warningMessagePrefix + ": A question with ID '" + criteriaId + "' does not exist.");
+                  return;
+                }
+
+                const matchingQuestion = matchingQuestions[0];
+
+                if (!matchingQuestion.options) {
+                  errors.push(warningMessagePrefix + ": A question with ID '" + criteriaId + "' does not have any options.");
+                  return;
+                }
+                
+
+                slugs.forEach(slug => {
+                  const matchingOptions = matchingQuestion.options.filter(o => o.slug == slug);
+
+                  if (!matchingOptions || matchingOptions.length == 0) {
+                    errors.push(warningMessagePrefix + ": A question with ID '" + criteriaId + "' does not have an option matching slug '" + slug + "'");
+                  }
+                });
+              }              
+            });
+
+
+            setIsLoading(false);
+
+            setInitialisationErrors(errors);
+           });
+
   },[isLoading]);
 
 
@@ -333,12 +377,32 @@ function App() {
     return classifications;    
   })();
 
+  const renderErrors = () => {
+    return (
+      <div className="d-flex flex-column justify-content-center align-items-center">
+        {
+          initialisationErrors.map((error, errorId) => (
+            <div className="row">
+              <div key={errorId} className="alert alert-danger" role="alert">
+              {error}
+              </div>
+            </div>
+          ))
+        }
+      </div>
+    );
+  };
+
   return (
     <div>
       {
         isLoading ? (<LoadingScreen />) : (
           <>
             <div dangerouslySetInnerHTML={ { __html: templatedHeaderHtml }}></div>
+            {
+              initialisationErrors && renderErrors()
+            }
+
             <div className="d-flex flex-column flex-md-row min-vh-100 pb-5">
               <Sidebar
                 questions={questions}
