@@ -228,6 +228,7 @@ function App() {
   const [services, setServices] = useState([]);
   const [serviceAttributeDefinitions, setServiceAttributeDefinitions] = useState([]);
   const [initialisationErrors, setInitialisationErrors] = useState([]);
+  const [siteOptions, setSiteOptions] = useState({});
 
 
   const handleOptionSelect = (questionId, optionSlug, isMulti) => {
@@ -262,6 +263,17 @@ function App() {
   const selectedServices = services.filter(s => selected.includes(s.name));
 
   useEffect(() => {
+    // Load site options
+    const fetchSiteOptions = fetch('/site_options.json').then(resp => {
+      if (!resp.ok) return;
+
+      return resp.json();
+    })
+    .then(setSiteOptions)
+    .catch(() => {
+      // Use defaults
+    })
+
     // Load templates
     const fetchHeaderTemplate = fetch('/templates/header.tpl').then(resp => {
       if (!resp.ok) return;
@@ -318,7 +330,7 @@ function App() {
     })
 
     var errors = [];
-    Promise.all([fetchHeaderTemplate, fetchFooterTemplate, fetchQuestions, fetchServices])
+    Promise.all([fetchSiteOptions, fetchHeaderTemplate, fetchFooterTemplate, fetchQuestions, fetchServices])
            .then(() => {
             // Check criteria values against the different answer slugs to ensure that there are no erroneous criteria rules in services.json
             services.forEach(service => {
@@ -355,9 +367,11 @@ function App() {
               }              
             });
 
+            if (siteOptions && siteOptions.title) {
+              document.title = siteOptions.title;
+            }
 
             setIsLoading(false);
-
             setInitialisationErrors(errors);
            });
 

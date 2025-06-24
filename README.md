@@ -108,6 +108,13 @@ The required `criteria` key for each service handles the filtering, with the val
 The optional `caveats` key for each service is expected to either be unset, or to be an object. In the object, the keys relate to the question IDs, and the values are an Object which stipulates the criteria and assigned caveats.
 E.g. In the example above, we want to show a caveat "Encryption required" when the classification is set to `sensitive_moderate_risk`, `confidential_or_restricted_high_risk`, or `payment_information_extreme_risk`. The caveat title appears in the service card, and the Caveat description appears in the Comparison Table when the service is selected.
 
+If you want to change the title of the site, you can do so using a `site_options.json` file, bound to `/usr/share/nginx/html/site_options.json`, as below:
+```
+{
+  "title": "My new site title"
+}
+```
+
 ## Development
 First, run the development server:
 
