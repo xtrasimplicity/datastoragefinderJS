@@ -375,7 +375,7 @@ function App() {
             setInitialisationErrors(errors);
            });
 
-  },[isLoading]);
+  },[]);
 
 
   const dataClassifications = (() => {
