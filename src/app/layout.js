@@ -10,10 +10,6 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-export const metadata = {
-  title: "Data Storage Finder",
-  description: "Data Storage Finder",
-};
 
 export default function RootLayout({ children }) {
   return (

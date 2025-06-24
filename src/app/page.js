@@ -228,7 +228,9 @@ function App() {
   const [services, setServices] = useState([]);
   const [serviceAttributeDefinitions, setServiceAttributeDefinitions] = useState([]);
   const [initialisationErrors, setInitialisationErrors] = useState([]);
-  const [siteOptions, setSiteOptions] = useState({});
+  const [siteOptions, setSiteOptions] = useState({
+    title: "Data Storage Finder"
+  });
 
 
   const handleOptionSelect = (questionId, optionSlug, isMulti) => {
@@ -265,7 +267,7 @@ function App() {
   useEffect(() => {
     // Load site options
     const fetchSiteOptions = fetch('/site_options.json').then(resp => {
-      if (!resp.ok) return;
+      if (!resp.ok) return siteOptions;
 
       return resp.json();
     })
@@ -366,11 +368,7 @@ function App() {
                 });
               }              
             });
-
-            if (siteOptions && siteOptions.title) {
-              document.title = siteOptions.title;
-            }
-
+            
             setIsLoading(false);
             setInitialisationErrors(errors);
            });
